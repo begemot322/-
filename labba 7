@@ -1,0 +1,56 @@
+class CardShop:
+    def __init__(self):
+        self.card_types = []
+        self.card_prices = []
+        self.comboes = []
+
+    def input_card_info(self):
+        K = int(input("Введите количество видов рождественских открыток: "))
+        for i in range(K):
+            price = int(input(f"Введите цену для открытки номер {i + 1}: "))
+            self.card_prices.append(price)
+            self.card_types.append(i + 1)
+
+    def cwr(self, iterable, r):
+        pool = tuple(iterable)
+        n = len(pool)
+        if not n and r:
+            return
+        indices = [0] * r
+        yield tuple(pool[i] for i in indices)
+        while True:
+            for i in reversed(range(r)):
+                if indices[i] != n - 1:
+                    break
+            else:
+                return
+            indices[i:] = [indices[i] + 1] * (r - i)
+            yield tuple(pool[i] for i in indices)
+
+    def generate_combinations(self, N, max_sum):
+        for num_cards in range(1, N + 1):
+            for combo in self.cwr(self.card_types, num_cards):
+                if len(combo) == N:
+                    total_price = sum(self.card_prices[i - 1] for i in combo)
+                    if total_price <= max_sum:
+                        self.comboes.append((combo, total_price))
+
+    def print_combinations(self):
+        if len(self.comboes) == 0:
+            print("Невозможно купить открытки с заданными параметрами")
+        else:
+            for combo, total_price in self.comboes:
+                cards_output = ""
+                for card in combo:
+                    card_output = f"Открытка {card} ({self.card_prices[card - 1]} руб.)\n"
+                    cards_output += card_output
+                print(f"Сумма покупки: {total_price} руб.\n{cards_output}")
+
+
+# Использование класса
+card_shop = CardShop()
+card_shop.input_card_info()
+N = int(input("Введите количество открыток, которое нужно купить: "))
+max_sum = int(input("Введите максимальную сумму, которую вы можете потратить: "))
+card_shop.generate_combinations(N, max_sum)
+card_shop.print_combinations()
