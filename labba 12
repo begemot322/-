@@ -1,4 +1,4 @@
-#(|х(2n-1)|)/(2n-1)!,
+#(|х^(2n-1)|)/(2n-1)!,
 
 import random
 import numpy as np
@@ -17,15 +17,13 @@ def generate_matrix():
 def sum(x, t):
     n = 1
     result = 0
-    sign = -1
     while True:
-        curr_term = Decimal(np.linalg.det((x))**(2*n-1)) / Decimal(factorial(2*n-1))  # Вычисляем текущий член ряда
-        result += sign * curr_term  # Прибавляем его к результату с учетом знака
+        curr_term = Decimal(np.linalg.det((x)**(2*n-1))) / Decimal(factorial(2*n-1))  # Вычисляем текущий член ряда
+        result += ((-1) ** n) * curr_term  # Прибавляем его к результату с учетом знака
         # Проверка на достижение точности
         if abs(curr_term) < 10**(-t):
             break
         n += 1
-        sign *= -1
 
     return result
 
