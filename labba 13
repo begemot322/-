@@ -1,0 +1,29 @@
+#12.	Определить количество пассажиров , севших в порту Квинстаун, в возрастном интервале мода
+# +-5 лет и сколько из них выжило
+
+import csv
+import statistics
+
+with open('titanic.csv', 'r') as file:
+    reader = csv.DictReader(file)
+
+    all_passengers = 0    # все пассажиры возраста моды +- 5 лет
+    survived_passengers = 0       # все выжившишие возраста моды +- 5 лет
+    ages = []
+    for row in reader:
+        age = row['Age']
+        if age.isdigit():
+            ages.append(int(age))
+
+        mode_age = statistics.mode(ages)
+
+    file.seek(0)
+
+    for row in reader:
+        if row['Age'].isdigit() and mode_age - 5 <= int(row['Age']) <= mode_age + 5:
+            all_passengers += 1
+            if row['Survived'] == '1':
+                survived_passengers += 1
+
+print(f"Количество пассажиров в возрастном интервале ± 5 лет от моды возраста: {all_passengers}")
+print(f"Количество выживших пассажиров в этом интервале: {survived_passengers}")
