@@ -6,14 +6,18 @@ import statistics
 
 with open('tested (1).csv', 'r') as file:
     reader = csv.DictReader(file)
-
-    all_passengers = 0    # все пассажиры возраста моды +- 5 лет
-    survived_passengers = 0       # все выжившишие возраста моды +- 5 лет
+    all_passengers = 0
+    survived_passengers = 0
     ages = []
+
     for row in reader:
         age = row['Age']
-        if age.isdigit():
-            ages.append(int(age))
+        if '.' in age:
+            float_age = float(age)
+            ages.append(float_age)
+        else:
+            if age.isdigit():
+                ages.append(int(age))
 
     mode_age = statistics.mode(ages)
 
@@ -21,10 +25,19 @@ with open('tested (1).csv', 'r') as file:
 
     for row in reader:
         if row['Embarked'] == 'Q':
-            if row['Age'].isdigit() and mode_age - 5 <= int(row['Age']) <= mode_age + 5:
-                all_passengers += 1
-                if row['Survived'] == '1':
-                    survived_passengers += 1
+            age = row['Age']
+            if '.' in age:
+                float_age = float(age)
+                if mode_age - 5 <= float_age <= mode_age + 5:
+                    all_passengers += 1
+                    if row['Survived'] == '1':
+                        survived_passengers += 1
+            else:
+                if age.isdigit() and mode_age - 5 <= int(age) <= mode_age + 5:
+                    all_passengers += 1
+                    if row['Survived'] == '1':
+                        survived_passengers += 1
+
 
 print(f"Количество пассажиров в возрастном интервале ± 5 лет от моды возраста: {all_passengers}")
 print(f"Количество выживших пассажиров в этом интервале: {survived_passengers}")
