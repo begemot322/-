@@ -1,11 +1,8 @@
 #(|х^(2n-1)|)/(2n-1)!,
-
 import random
 import numpy as np
 from decimal import Decimal, getcontext
-from math import factorial
 
-# Генерация случайного значения k и матрицы x
 def generate_matrix():
     k = random.randint(2, 8)
     x = np.random.randint(-1, 2, (k, k))
@@ -14,20 +11,25 @@ def generate_matrix():
     else:
         return x
 
+def calculate_factorial(n):
+    result = 1
+    for i in range(1, 2 * n):
+        result *= i
+    return result
+
 def sum(x, t):
     n = 1
     result = 0
     while True:
-        curr_term = Decimal(np.linalg.det((x)**(2*n-1))) / Decimal(factorial(2*n-1))  # Вычисляем текущий член ряда
-        result += ((-1) ** n) * curr_term  # Прибавляем его к результату с учетом знака
-        # Проверка на достижение точности
+        result_matrix = np.linalg.matrix_power(x, 2 * n - 1)
+        curr_term = Decimal(np.linalg.det(result_matrix)) / Decimal(calculate_factorial(n))
+        result += ((-1) ** n) * curr_term
         if abs(curr_term) < 10**(-t):
             break
         n += 1
 
     return result
 
-# Ввод точности вычислений
 t = int(input('Введите число t, которое является точностью вычисления: '))
 if t < 1:
     t = int(input('Вы ввели маленькое число, введите t больше или равное 1: '))
