@@ -4,7 +4,7 @@
 import csv
 import statistics
 
-with open('titanic.csv', 'r') as file:
+with open('tested (1).csv', 'r') as file:
     reader = csv.DictReader(file)
 
     all_passengers = 0    # все пассажиры возраста моды +- 5 лет
@@ -15,15 +15,16 @@ with open('titanic.csv', 'r') as file:
         if age.isdigit():
             ages.append(int(age))
 
-        mode_age = statistics.mode(ages)
+    mode_age = statistics.mode(ages)
 
     file.seek(0)
 
     for row in reader:
-        if row['Age'].isdigit() and mode_age - 5 <= int(row['Age']) <= mode_age + 5:
-            all_passengers += 1
-            if row['Survived'] == '1':
-                survived_passengers += 1
+        if row['Embarked'] == 'Q':
+            if row['Age'].isdigit() and mode_age - 5 <= int(row['Age']) <= mode_age + 5:
+                all_passengers += 1
+                if row['Survived'] == '1':
+                    survived_passengers += 1
 
 print(f"Количество пассажиров в возрастном интервале ± 5 лет от моды возраста: {all_passengers}")
 print(f"Количество выживших пассажиров в этом интервале: {survived_passengers}")
