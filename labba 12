@@ -1,42 +1,31 @@
 #(|х^(2n-1)|)/(2n-1)!,
-import random
 import numpy as np
-from decimal import Decimal, getcontext
+import random
 
-def generate_matrix():
-    k = random.randint(2, 8)
-    x = np.random.randint(-1, 2, (k, k))
-    if abs(np.linalg.det(x)) == 0:
-        return generate_matrix()
+# Создание матрицы и ввод данных
+while True:
+    t = input("Введите количество знаков после запятой при вычислении неточности: ")
+    if t.isdigit() and int(t) > 1:
+        t = int(t)
+        break
     else:
-        return x
+        print("Введите натуральное число больше 1.")
 
-def calculate_factorial(n):
-    result = 1
-    for i in range(1, 2 * n):
-        result *= i
-    return result
+k = random.randint(1, 4)
+x = np.random.uniform(-1, 1, (k, k))
+print(f"Матрица: \n{x}")
 
-def sum(x, t):
-    n = 1
-    result = 0
-    while True:
-        result_matrix = np.linalg.matrix_power(x, 2 * n - 1)
-        curr_term = Decimal(np.linalg.det(result_matrix)) / Decimal(calculate_factorial(n))
-        result += ((-1) ** n) * curr_term
-        if abs(curr_term) < 10**(-t):
-            break
-        n += 1
+n = 1
+before_digit, result, accuracy = 0, 0, 1
+fact, sign = 1, -1
 
-    return result
+while abs(accuracy) > (0.1 ** t):
+    before_digit += result
+    fact *= (2 * n - 1) * (2 * n)
+    result += sign * np.linalg.det(np.power(x, 2 * n - 1)) / fact
+    n += 1
+    accuracy = abs(before_digit - result)
+    sign *= -1
 
-t = int(input('Введите число t, которое является точностью вычисления: '))
-if t < 1:
-    t = int(input('Вы ввели маленькое число, введите t больше или равное 1: '))
-
-x = generate_matrix()
-print(f"Матрица \n {x}")
-
-getcontext().prec = t
-sum_value = sum(x, t)
-print(f"Сумма ряда: {sum_value:.{t}f}")
+print(f"\nИтоговая сумма: {result:.{t}f}")
+print(f"Кол-во итераций: {n-1}")
