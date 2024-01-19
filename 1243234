@@ -11,8 +11,10 @@ with open("begemot123.txt", "r") as file:
         numbers = re.findall(r'\b[0-9A-F]F[0-9A-F]*F[0-9A-F]*\b', buffer)
 
         if numbers:
-            max_number = max(numbers)
-            count = len(numbers)
+            decimal_numbers = [int(x, 16) for x in numbers]
 
-            print(f"Максимальное число: {max_number}, Количество: {count}")
+            if decimal_numbers:
+                max_number = max(decimal_numbers)
+                count = len(decimal_numbers)
 
+                print(f"Максимальное число: {max_number}, Количество: {count}")
