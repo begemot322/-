@@ -1,0 +1,18 @@
+import re
+
+with open("begemot123.txt", "r") as file:
+    while True:
+        buffer = file.readline()
+
+        if not buffer:
+            print("File is empty!")
+            break
+
+        numbers = re.findall(r'\b[0-9A-F]F[0-9A-F]*F[0-9A-F]*\b', buffer)
+
+        if numbers:
+            max_number = max(numbers)
+            count = len(numbers)
+
+            print(f"Максимальное число: {max_number}, Количество: {count}")
+
